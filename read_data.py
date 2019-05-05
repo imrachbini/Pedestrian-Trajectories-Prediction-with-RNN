@@ -11,6 +11,7 @@ This will return the desired data groups.
 Author: Mingchen Li
 '''
 import numpy as np
+import pandas as pd
 
 num_feature = 5
 '''
@@ -19,16 +20,38 @@ Then, it groups the data by the ID of the pedestrains, so that the data set is f
 and the values to be array of xy tuples.
 '''
 def preprocess(file_path):
+    print('Reading file: {}'.format(file_path))
+    print('Begin preprocessing...')
     all_ped_data = {}
-    current_ped = 0
-    data = np.genfromtxt(file_path, delimiter=',')
 
-    numPeds = np.size(np.unique(data[1, :]))        # Get the number of pedestrians in the current dataset
+    selected_col = ['hash', 'x_entry', 'y_entry', 'x_exit', 'y_exit']
+    train = pd.read_csv(file_path).drop('Unnamed: 0', axis=1)
+    train = train[selected_col]
 
-    for ped in range(1, numPeds+1):
-        traj = data[:, data[1, :] == ped]           # Extract trajectory of the current ped
-        traj = traj[[3, 2], :]                      # Format it as (x, y, ID)
-        all_ped_data[current_ped + ped] = traj
+    unique_hash = train.hash.unique()
+    hash_count = len(unique_hash)
+    counter = 1
+    print('Separate data by Hash. Total hash : {}'.format(hash_count))
+
+    for hsh in unique_hash:
+        all_ped_data[hsh] = train.loc[train.hash == hsh].drop('hash', axis=1).values
+
+        print("Progress : {}".format(counter), end="\r")
+        counter += 1
+
+    counter = 1
+    print('Processing batch data...')
+    for hsh, values in all_ped_data.items():
+        print("Progress : {}".format(counter), end="\r")
+        counter += 1
+        tmp_arr = []
+        for row in values:
+            tmp_arr.append(list(row[:2]))
+            tmp_arr.append([row[2], row[3]])
+
+        tmp_arr = np.array(tmp_arr)
+        all_ped_data[hsh] = tmp_arr.T
+
     return all_ped_data
 
 '''
@@ -48,7 +71,7 @@ def aline_data(file_path, num_feature):
     same_size_data_Y = []
     for pedID in all_ped_data:
         hm_group = all_ped_data[pedID].shape[1]/(num_feature+1)
-        for i in range(hm_group):
+        for i in range(int(hm_group)):
 
             same_size_data_X.append(all_ped_data[pedID][:, i*(num_feature+1) : (i+1)*(num_feature+1)-1])
 
@@ -87,8 +110,8 @@ def next_batch(batch, batch_size, filt_X, filt_Y):
 
     return x_batch, y_batch
 
-training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = aline_data('Crowds_university.csv', num_feature)
-print(len(training_X))
-print(len(dev_X))
-print(len(testing_X))
+# training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = aline_data('Crowds_university.csv', num_feature)
+# print(len(training_X))
+# print(len(dev_X))
+# print(len(testing_X))
 
