@@ -12,7 +12,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 from tensorflow.python.ops import rnn, rnn_cell
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import read_data
 
 
@@ -28,7 +28,7 @@ targets = tf.placeholder('float', name = 'targets')
 weight = tf.Variable(tf.truncated_normal([rnn_size, 2]), name = 'weight')
 bias = tf.Variable(tf.constant(0.1, shape=[2]),name = 'bias')
 
-training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = read_data.aline_data('Crowds_university.csv', num_feature)
+training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = read_data.aline_data('data_train.csv', num_feature)
 
 '''
 This function defines a RNN. It is an LSTM RNN for now, but if want to change to GRU, just change the
@@ -122,11 +122,11 @@ def train_neural_network(inputs):
             print('Train iteration', iteration,'train loss:',train_epoch_loss)
             print('Train iteration', iteration,'dev loss:',dev_epoch_loss)
         iter_list = range(1, iteration+1)
-        plt.figure(1)
-        plt.plot(iter_list, train_cost_list)
-        plt.plot(iter_list, dev_cost_list)
-        plt.title('iteration vs. epoch cost, university')
-        plt.show()
+        # plt.figure(1)
+        # plt.plot(iter_list, train_cost_list)
+        # plt.plot(iter_list, dev_cost_list)
+        # plt.title('iteration vs. epoch cost, university')
+        # plt.show()
 
         # After the training, print out the trained parameters
         trained_w = sess.run(weight)
