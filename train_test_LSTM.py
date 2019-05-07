@@ -12,8 +12,9 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 from tensorflow.python.ops import rnn, rnn_cell
-# import matplotlib.pyplot as plt
 import read_data
+import pickle
+# import matplotlib.pyplot as plt
 
 
 num_feature = 5
@@ -121,6 +122,7 @@ def train_neural_network(inputs):
             dev_cost_list.append(dev_epoch_loss)
             print('Train iteration', iteration,'train loss:',train_epoch_loss)
             print('Train iteration', iteration,'dev loss:',dev_epoch_loss)
+        
         iter_list = range(1, iteration+1)
         # plt.figure(1)
         # plt.plot(iter_list, train_cost_list)
@@ -132,6 +134,9 @@ def train_neural_network(inputs):
         trained_w = sess.run(weight)
         trained_b = sess.run(bias)
         #print('trained_w: ', trained_w, 'trained_b: ', trained_b, 'trained_w shape: ', trained_w.shape)
+
+        # save model
+        pickle.dump(sess, open("misc/model.pickle", "wb"))
 
         # Begin testing
         test_epoch_loss = 0

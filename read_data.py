@@ -12,6 +12,9 @@ Author: Mingchen Li
 '''
 import numpy as np
 import pandas as pd
+import json
+import pickle
+from sklearn.preprocessing import MinMaxScaler
 
 num_feature = 5
 '''
@@ -28,6 +31,10 @@ def preprocess(file_path):
     train = pd.read_csv(file_path).drop('Unnamed: 0', axis=1)
     train = train[selected_col]
 
+    scaler = MinMaxScaler(feature_range=(0,1))
+    train[selected_col[1:]] = scaler.fit_transform(train[selected_col[1:]])
+    pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
+
     unique_hash = train.hash.unique()
     hash_count = len(unique_hash)
     counter = 1
@@ -35,22 +42,19 @@ def preprocess(file_path):
 
     for hsh in unique_hash:
         all_ped_data[hsh] = train.loc[train.hash == hsh].drop('hash', axis=1).values
-
-        print("Progress : {}".format(counter), end="\r")
-        counter += 1
-
-    counter = 1
-    print('Processing batch data...')
-    for hsh, values in all_ped_data.items():
-        print("Progress : {}".format(counter), end="\r")
-        counter += 1
+        
         tmp_arr = []
-        for row in values:
+        for row in all_ped_data[hsh]:
             tmp_arr.append(list(row[:2]))
             tmp_arr.append([row[2], row[3]])
 
         tmp_arr = np.array(tmp_arr)
-        all_ped_data[hsh] = tmp_arr.T
+        all_ped_data[hsh] = tmp_arr.T.tolist()
+
+        print("Progress   : {}".format(counter), end="\r")
+        counter += 1
+
+    json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
 
     return all_ped_data
 
