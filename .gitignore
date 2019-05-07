@@ -1,3 +1,5 @@
 /venv
 /data_train.csv
 /data_test.csv
+.DS_Store
+/misc/preprocessed-data.json
