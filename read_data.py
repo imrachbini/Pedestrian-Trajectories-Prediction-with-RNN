@@ -33,7 +33,7 @@ def preprocess(file_path):
 
     scaler = MinMaxScaler(feature_range=(0,1))
     train[selected_col[1:]] = scaler.fit_transform(train[selected_col[1:]])
-    pickle.dump(scaler, open("misc/scaler.p", "wb"))
+    pickle.dump(scaler, open("misc/scaler.pickles", "wb"))
 
     unique_hash = train.hash.unique()
     hash_count = len(unique_hash)
