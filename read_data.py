@@ -68,6 +68,7 @@ set and 30% of test set. Thirdly, each block is separated into input and target 
 def aline_data(file_path, num_feature):
     all_ped_data = preprocess(file_path)
     for pedID, _ in all_ped_data.copy().items():
+        all_ped_data[pedID] = np.array(all_ped_data[pedID])
         if all_ped_data[pedID].shape[1] <= num_feature:
             del all_ped_data[pedID]
     
