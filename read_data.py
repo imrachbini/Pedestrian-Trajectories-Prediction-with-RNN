@@ -75,13 +75,19 @@ set and 30% of test set. Thirdly, each block is separated into input and target 
 '''
 def aline_data(file_path, num_feature):
     all_ped_data = preprocess(file_path)
+    print('INFO: filtering data which shape <= num_feature...')
     for pedID, _ in all_ped_data.copy().items():
         all_ped_data[pedID] = np.array(all_ped_data[pedID])
         if all_ped_data[pedID].shape[1] <= num_feature:
             del all_ped_data[pedID]
     
+    total_keys = len(all_ped_data.keys())
+    count = 1
+    print('INFO: Iterating dict. Total keys: {}'.format(total_keys))
+    
     same_size_data_X = []
     same_size_data_Y = []
+    
     for pedID in all_ped_data:
         hm_group = all_ped_data[pedID].shape[1]/(num_feature+1)
         for i in range(int(hm_group)):
@@ -107,6 +113,12 @@ def aline_data(file_path, num_feature):
             else:
                 testing_X.append(same_size_data_X[j])
                 testing_Y.append(same_size_data_Y[j])
+
+        print('INFO: Iteration progress: {}'.format(count), end='\r')
+        count += 1
+
+    trained_ready_data = (training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y)
+    pickle.dump(trained_ready_data, open("misc/trained_ready_data.pickle", "wb"))
 
     return training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y
 
