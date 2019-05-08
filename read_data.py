@@ -74,6 +74,16 @@ the dataset. Each element in the list is an numpy array contains (num_feature+1)
 set and 30% of test set. Thirdly, each block is separated into input and target tuples.
 '''
 def aline_data(file_path, num_feature):
+    try:
+        trained_ready_data = pickle.load(open('misc/trained_ready_data.pickle', 'rb'))
+        training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = trained_ready_data
+        print('INFO: Sucessfully read train-ready data')
+
+        return training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y
+    except Exception as e:
+        print(e)
+        print('INFO: Train-ready data not found')
+
     all_ped_data = preprocess(file_path)
     print('INFO: filtering data which shape <= num_feature...')
     for pedID, _ in all_ped_data.copy().items():
