@@ -23,8 +23,16 @@ Then, it groups the data by the ID of the pedestrains, so that the data set is f
 and the values to be array of xy tuples.
 '''
 def preprocess(file_path):
-    print('Reading file: {}'.format(file_path))
-    print('Begin preprocessing...')
+    try:
+        all_ped_data = json.load(open('misc/preprocessed-data.json', 'r'))
+        print('INFO: Sucessfully read preprocessed data')
+
+        return all_ped_data
+    except:
+        print('INFO: Preprocessed data not found')
+
+    print('INFO: Reading file: {}'.format(file_path))
+    print('INFO: Begin preprocessing...')
     all_ped_data = {}
 
     selected_col = ['hash', 'x_entry', 'y_entry', 'x_exit', 'y_exit']
@@ -38,7 +46,7 @@ def preprocess(file_path):
     unique_hash = train.hash.unique()
     hash_count = len(unique_hash)
     counter = 1
-    print('Separate data by Hash. Total hash : {}'.format(hash_count))
+    print('INFO: Separate data by Hash. Total hash: {}'.format(hash_count))
 
     for hsh in unique_hash:
         all_ped_data[hsh] = train.loc[train.hash == hsh].drop('hash', axis=1).values
@@ -51,7 +59,7 @@ def preprocess(file_path):
         tmp_arr = np.array(tmp_arr)
         all_ped_data[hsh] = tmp_arr.T.tolist()
 
-        print("Progress   : {}".format(counter), end="\r")
+        print("INFO:Progress: {}".format(counter), end="\r")
         counter += 1
 
     json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
@@ -68,6 +76,7 @@ set and 30% of test set. Thirdly, each block is separated into input and target 
 def aline_data(file_path, num_feature):
     all_ped_data = preprocess(file_path)
     for pedID, _ in all_ped_data.copy().items():
+        all_ped_data[pedID] = np.array(all_ped_data[pedID])
         if all_ped_data[pedID].shape[1] <= num_feature:
             del all_ped_data[pedID]
     
