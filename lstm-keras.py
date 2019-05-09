@@ -20,13 +20,6 @@ learning_rate = 0.0005
 
 training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y = read_data.aline_data('data_train.csv', num_feature)
 
-training_X = np.array(training_X)
-training_Y = np.array(training_Y)
-dev_X = np.array(dev_X)
-dev_Y = np.array(dev_Y)
-testing_X = np.array(testing_X)
-testing_Y = np.array(testing_Y)
-
 model = Sequential()
 model.add(
     LSTM(rnn_size, 
