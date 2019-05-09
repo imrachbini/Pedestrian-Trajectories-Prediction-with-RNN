@@ -13,7 +13,7 @@ from keras.layers import LSTM
 from keras.utils.training_utils import multi_gpu_model
 
 load_weight = False
-num_feature = 5
+num_feature = 10
 batch_size = 4
 rnn_size = 512
 output_size = 1

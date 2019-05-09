@@ -16,7 +16,6 @@ import json
 import pickle
 from sklearn.preprocessing import MinMaxScaler
 
-num_feature = 5
 '''
 This function processes the data set from 4 rows to 3 rows, getting rid of the "time" row, since the data already ordered sequentially based on time.
 Then, it groups the data by the ID of the pedestrains, so that the data set is formed as a dictionary, with the keys to be the ID of pedestrains
