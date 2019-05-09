@@ -55,14 +55,15 @@ def preprocess(file_path):
         tmp_arr = np.array(tmp_arr)
         all_ped_data[hsh] = tmp_arr.T.tolist()
 
-        print("INFO:Progress: {}".format(counter), end="\r")
+        print("INFO: Progress: {}".format(counter), end="\r")
         counter += 1
 
-    # scaler = MinMaxScaler(feature_range=(0,1))
-    # all_ped_data = scaler.fit_transform(all_ped_data)
-    # pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
+    scaler = MinMaxScaler(feature_range=(0,1))
+    all_ped_data_scaled = scaler.fit_transform(all_ped_data)
+    pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
 
     json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
+    json.dump(all_ped_data_scaled, open('misc/preprocessed-data-scaled.json', 'w'))
 
     return all_ped_data
 
