@@ -58,12 +58,12 @@ def preprocess(file_path):
         print("INFO: Progress: {}".format(counter), end="\r")
         counter += 1
 
-    scaler = MinMaxScaler(feature_range=(0,1))
-    all_ped_data_scaled = scaler.fit_transform(all_ped_data)
-    pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
+    # scaler = MinMaxScaler(feature_range=(0,1))
+    # all_ped_data_scaled = scaler.fit_transform(all_ped_data)
+    # pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
 
     json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
-    json.dump(all_ped_data_scaled, open('misc/preprocessed-data-scaled.json', 'w'))
+    # json.dump(all_ped_data_scaled, open('misc/preprocessed-data-scaled.json', 'w'))
 
     return all_ped_data
 
@@ -90,9 +90,18 @@ def aline_data(file_path, num_feature):
     print('INFO: filtering data which shape <= num_feature...')
     for pedID, _ in all_ped_data.copy().items():
         all_ped_data[pedID] = np.array(all_ped_data[pedID])
+
         if all_ped_data[pedID].shape[1] <= num_feature:
-            del all_ped_data[pedID]
-    
+            # del all_ped_data[pedID]
+
+            count_miss = num_feature - all_ped_data[pedID].shape[1] + 1
+            arrT = all_ped_data[pedID].T
+            first_elm = arrT[0]
+            for x in range(count_miss):
+                arrT = np.concatenate((first_elm, arrT))
+
+            all_ped_data[pedID] = arrT.T
+
     total_keys = len(all_ped_data.keys())
     count = 1
     print('INFO: Iterating dict. Total keys: {}'.format(total_keys))
