@@ -136,7 +136,7 @@ def train_neural_network(inputs):
         #print('trained_w: ', trained_w, 'trained_b: ', trained_b, 'trained_w shape: ', trained_w.shape)
 
         # save model
-        pickle.dump(sess, open("misc/model.pickle", "wb"))
+        # pickle.dump(sess, open("misc/model.pickle", "wb"))
 
         # Begin testing
         test_epoch_loss = 0
