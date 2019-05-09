@@ -39,4 +39,4 @@ model.compile(loss='mse', optimizer='adam')
 history = model.fit(training_X, training_Y, epochs=100, batch_size=num_feature,
                     validation_data=(dev_X, dev_Y), verbose=2, shuffle=False)
 
-model.save('keras_lstm.h5')
+model.save('misc/keras_lstm.h5')
