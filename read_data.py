@@ -96,7 +96,7 @@ def aline_data(file_path, num_feature):
 
             count_miss = num_feature - all_ped_data[pedID].shape[1] + 1
             arrT = all_ped_data[pedID].T
-            first_elm = arrT[0]
+            first_elm = np.array([arrT[0]])
             for x in range(count_miss):
                 arrT = np.concatenate((first_elm, arrT))
 
