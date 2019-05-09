@@ -92,8 +92,6 @@ def aline_data(file_path, num_feature):
         all_ped_data[pedID] = np.array(all_ped_data[pedID])
 
         if all_ped_data[pedID].shape[1] <= num_feature:
-            # del all_ped_data[pedID]
-
             count_miss = num_feature - all_ped_data[pedID].shape[1] + 1
             arrT = all_ped_data[pedID].T
             first_elm = np.array([arrT[0]])
@@ -101,6 +99,10 @@ def aline_data(file_path, num_feature):
                 arrT = np.concatenate((first_elm, arrT))
 
             all_ped_data[pedID] = arrT.T
+
+        # Double check
+        if all_ped_data[pedID].shape[1] <= num_feature:
+            del all_ped_data[pedID]
 
     total_keys = len(all_ped_data.keys())
     count = 1
