@@ -17,3 +17,5 @@ LSTM_test_prediction_and_real\.csv
 *.pickle
 
 *.h5
+
+misc/trial1_with_scaler\.bak/
