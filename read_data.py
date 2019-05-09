@@ -39,10 +39,6 @@ def preprocess(file_path):
     train = pd.read_csv(file_path).drop('Unnamed: 0', axis=1)
     train = train[selected_col]
 
-    scaler = MinMaxScaler(feature_range=(0,1))
-    train[selected_col[1:]] = scaler.fit_transform(train[selected_col[1:]])
-    pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
-
     unique_hash = train.hash.unique()
     hash_count = len(unique_hash)
     counter = 1
@@ -61,6 +57,10 @@ def preprocess(file_path):
 
         print("INFO:Progress: {}".format(counter), end="\r")
         counter += 1
+
+    # scaler = MinMaxScaler(feature_range=(0,1))
+    # all_ped_data = scaler.fit_transform(all_ped_data)
+    # pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
 
     json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
 
@@ -81,10 +81,11 @@ def aline_data(file_path, num_feature):
 
         return training_X, training_Y, dev_X, dev_Y, testing_X, testing_Y
     except Exception as e:
-        print(e)
+        # print(e)
         print('INFO: Train-ready data not found')
 
     all_ped_data = preprocess(file_path)
+    print('INFO: Aline process')
     print('INFO: filtering data which shape <= num_feature...')
     for pedID, _ in all_ped_data.copy().items():
         all_ped_data[pedID] = np.array(all_ped_data[pedID])
