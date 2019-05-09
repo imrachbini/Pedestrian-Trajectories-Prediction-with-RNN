@@ -9,3 +9,11 @@ Terms_and_Conditions_-_EY_NextWave_Data_Science_Challenge_\.pdf
 __pycache__/
 
 misc/preprocessed-data\.json
+
+\.ipynb_checkpoints/
+
+LSTM_test_prediction_and_real\.csv
+
+*.pickle
+
+*.h5
