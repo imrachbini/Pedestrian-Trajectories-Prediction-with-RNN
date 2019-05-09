@@ -39,13 +39,21 @@ def preprocess(file_path):
     train = pd.read_csv(file_path).drop('Unnamed: 0', axis=1)
     train = train[selected_col]
 
+    scaler = MinMaxScaler(feature_range=(-1,1))
+    scaler = scaler.fit(
+        train[['x_entry', 'y_entry', 'x_exit', 'y_exit']].values.reshape(-1,1)
+    )
+    pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
+
     unique_hash = train.hash.unique()
     hash_count = len(unique_hash)
     counter = 1
     print('INFO: Separate data by Hash. Total hash: {}'.format(hash_count))
 
     for hsh in unique_hash:
-        all_ped_data[hsh] = train.loc[train.hash == hsh].drop('hash', axis=1).values
+        all_ped_data[hsh] = scaler.transform(
+            train.loc[train.hash == hsh].drop('hash', axis=1).values
+        )
         
         tmp_arr = []
         for row in all_ped_data[hsh]:
@@ -58,12 +66,7 @@ def preprocess(file_path):
         print("INFO: Progress: {}".format(counter), end="\r")
         counter += 1
 
-    # scaler = MinMaxScaler(feature_range=(0,1))
-    # all_ped_data_scaled = scaler.fit_transform(all_ped_data)
-    # pickle.dump(scaler, open("misc/scaler.pickle", "wb"))
-
     json.dump(all_ped_data, open('misc/preprocessed-data.json', 'w'))
-    # json.dump(all_ped_data_scaled, open('misc/preprocessed-data-scaled.json', 'w'))
 
     return all_ped_data
 
