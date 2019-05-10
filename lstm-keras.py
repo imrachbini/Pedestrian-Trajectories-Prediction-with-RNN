@@ -14,8 +14,9 @@ from keras.utils.training_utils import multi_gpu_model
 
 load_weight = False
 num_feature = 10
-batch_size = 4
+batch_size = 16
 rnn_size = 512
+epochs = 50
 output_size = 1
 learning_rate = 0.0005
 
@@ -35,7 +36,7 @@ with tf.device("/cpu:0"):
 gpu_model = multi_gpu_model(model, gpus=2)
 gpu_model.compile(loss='mse', optimizer='adam')
 
-history = gpu_model.fit(training_X, training_Y, epochs=100, batch_size=batch_size,
+history = gpu_model.fit(training_X, training_Y, epochs=epochs, batch_size=batch_size,
                     validation_data=(dev_X, dev_Y), verbose=1, shuffle=False)
 
 model.save('misc/keras_lstm.h5')
